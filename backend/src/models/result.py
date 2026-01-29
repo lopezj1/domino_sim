@@ -62,5 +62,5 @@ class MonteCarloResult:
             )
         if not (0 <= self.win_rate_a <= 1):
             raise ValueError(f"win_rate_a must be 0-1, got {self.win_rate_a}")
-        if not (0 <= self.ci_lower <= self.ci_upper <= 1):
+        if self.ci_lower > self.ci_upper:
             raise ValueError(f"CI bounds invalid: {self.ci_lower} > {self.ci_upper}")

@@ -6,39 +6,57 @@
 
 ## Prerequisites
 
-- Python 3.11+
-- Node.js 18+ (for frontend)
-- npm or yarn
-- Git
+- **Python 3.11+** installed on your system
+- **uv** package manager ([install uv](https://astral.sh/uv/install.sh))
+- **Node.js 18+** (for frontend)
+- **npm** or **yarn**
+- **Git**
 
 ---
 
-## Step 1: Clone & Setup Backend
+## Step 1: Clone & Setup Backend (with uv)
 
-### 1a. Create Python Virtual Environment
+### 1a. Install uv (one-time)
 
 ```bash
-cd /home/jlopez/domino_sim
-python3.11 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+curl -LsSf https://astral.sh/uv/install.sh | sh
+# Verify: uv --version
 ```
 
-### 1b. Install Python Dependencies
+### 1b. Create Python Virtual Environment
 
 ```bash
-cd backend
-pip install -r requirements.txt
+cd /home/jlopez/domino_sim/backend
+
+# Create virtual environment with uv
+uv venv .venv
+
+# Activate the environment
+source .venv/bin/activate
+# On Windows: .venv\Scripts\activate
+```
+
+### 1c. Install Python Dependencies
+
+```bash
+# Sync dependencies from uv.lock (locked versions for reproducibility)
+uv sync
+
+# Verify installation
+python --version  # Should be 3.11+
+pytest --version
 ```
 
 **Expected output**:
 ```
-Successfully installed fastapi uvicorn pytest ...
+Successfully synced dependencies from uv.lock
 ```
 
-### 1c. Run Backend Tests
+### 1d. Run Backend Tests
 
 ```bash
-pytest tests/ -v
+cd /home/jlopez/domino_sim/backend
+uv run pytest tests/ -v
 ```
 
 **Expected output**:
@@ -49,10 +67,10 @@ tests/unit/test_game_state.py::test_game_state_initial PASSED
 ======================== XX passed in Xs =======================
 ```
 
-### 1d. Start Backend Dev Server
+### 1e. Start Backend Dev Server
 
 ```bash
-uvicorn src.api.main:app --reload --port 8000
+uv run uvicorn src.api.main:app --reload --port 8000
 ```
 
 **Expected output**:
@@ -233,7 +251,8 @@ AVAILABLE_STRATEGIES = {
 
 3. Test:
 ```bash
-pytest tests/unit/test_strategies.py -v -k my_strategy
+cd backend
+uv run pytest tests/unit/test_strategies.py -v -k my_strategy
 ```
 
 4. Use in UI: Strategy selectors now include "my_strategy"
@@ -271,16 +290,36 @@ curl http://localhost:8000/api/my-endpoint
 
 Backend:
 ```bash
-pytest tests/ -v                    # All tests
-pytest tests/unit/ -v               # Unit tests only
-pytest tests/integration/ -v        # Integration tests only
-pytest tests/unit/test_game.py -v   # Specific test file
+cd backend
+uv run pytest tests/ -v                    # All tests
+uv run pytest tests/unit/ -v               # Unit tests only
+uv run pytest tests/integration/ -v        # Integration tests only
+uv run pytest tests/unit/test_game.py -v   # Specific test file
 ```
 
 Frontend:
 ```bash
+cd frontend
 npm test                            # All tests
 npm test -- GameSimulator           # Specific component
+```
+
+#### Format & Lint Code
+
+```bash
+cd backend
+
+# Format with Black
+uv run black src/ tests/
+
+# Sort imports with isort
+uv run isort src/ tests/
+
+# Lint with flake8
+uv run flake8 src/ tests/
+
+# Type check with mypy
+uv run mypy src/
 ```
 
 #### View API Documentation
@@ -293,6 +332,19 @@ http://localhost:8000/redoc     # ReDoc
 
 ---
 
+## Common uv Commands
+
+| Task | Command |
+|------|---------|
+| **Create env** | `uv venv .venv` |
+| **Activate env** | `source .venv/bin/activate` |
+| **Sync deps** | `uv sync` |
+| **Run tests** | `uv run pytest` |
+| **Format** | `uv run black src/` |
+| **Add dep** | `uv add package-name` |
+
+---
+
 ## Troubleshooting
 
 ### Backend won't start
@@ -301,23 +353,32 @@ Error: Port 8000 already in use
 ```
 Solution: Kill process or use different port:
 ```bash
-uvicorn src.api.main:app --reload --port 8001
+uv run uvicorn src.api.main:app --reload --port 8001
 ```
 
 ### Frontend can't reach backend
 ```
 Error: Failed to fetch from http://localhost:8000
 ```
-Solution: Ensure backend is running (Step 1d) and check CORS settings in `backend/src/api/main.py`
+Solution: Ensure backend is running (Step 1e) and check CORS settings in `backend/src/api/main.py`
 
 ### Tests fail with import errors
 ```
 ModuleNotFoundError: No module named 'src'
 ```
-Solution: Ensure you're in `backend/` directory and running from there:
+Solution: Ensure you're in `backend/` directory and running with uv:
 ```bash
 cd backend
-pytest tests/ -v
+uv run pytest tests/ -v
+```
+
+### Virtual environment issues
+```bash
+# Recreate from scratch
+rm -rf .venv/
+uv venv .venv
+source .venv/bin/activate
+uv sync
 ```
 
 ### Node/Python version issues
@@ -336,34 +397,36 @@ python3 --version # Ensure >= 3.11
 
 ```
 backend/
+├── pyproject.toml        # uv project config
+├── uv.lock              # Locked dependency versions
+├── .venv/               # Virtual environment (created by uv)
 ├── src/
-│   ├── models/           # Tile, GameState, Move, etc.
-│   ├── engine/           # Game simulation core
-│   ├── strategy/         # Player strategies
-│   ├── simulation/       # Single game + Monte Carlo runners
-│   ├── aggregation/      # Statistics
-│   └── api/              # FastAPI routes
-├── tests/                # Unit + integration tests
-└── requirements.txt      # Python deps
+│   ├── models/          # Tile, GameState, Move, etc.
+│   ├── engine/          # Game simulation core
+│   ├── strategy/        # Player strategies
+│   ├── simulation/      # Single game + Monte Carlo runners
+│   ├── aggregation/     # Statistics
+│   └── api/             # FastAPI routes
+└── tests/               # Unit + integration tests
 
 frontend/
 ├── src/
-│   ├── components/       # React components
-│   ├── pages/            # Page layouts
-│   ├── services/         # API client
-│   └── hooks/            # Custom React hooks
-├── tests/                # Component + E2E tests
-└── package.json          # Node deps
+│   ├── components/      # React components
+│   ├── pages/           # Page layouts
+│   ├── services/        # API client
+│   └── hooks/           # Custom React hooks
+└── tests/               # Component + E2E tests
 ```
 
 ---
 
 ## Next Steps
 
-- **Contribute**: Add more strategies, improve UI, optimize performance
-- **Deploy**: See [DEPLOYMENT.md](../docs/DEPLOYMENT.md) for cloud deployment
-- **Research**: Export results and analyze using SymPy, scipy, or pandas
-- **Extend**: Add 3+ player support, persistent storage, user accounts
+- **Run tests**: `cd backend && uv run pytest` to verify everything works
+- **Explore code**: Check `backend/src/models/` to understand game state
+- **Add strategies**: Implement your own strategy in `backend/src/strategy/`
+- **Extend features**: Build on the simulation engine for new game modes
+- **Deploy**: See DEPLOYMENT.md for production setup
 
 ---
 
@@ -371,11 +434,11 @@ frontend/
 
 For issues or questions:
 1. Check existing GitHub issues
-2. Review [ARCHITECTURE.md](../docs/ARCHITECTURE.md)
+2. Review ARCHITECTURE.md
 3. Run with `--debug` flag for verbose logs
 
 ---
 
 **Happy simulating!** 🎲
 
-Version: 1.0.0 | Last Updated: 2025-01-29
+Version: 1.0.0 | Last Updated: 2025-01-29 | Using uv for environment management

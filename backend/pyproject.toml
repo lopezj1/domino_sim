@@ -11,8 +11,29 @@ dependencies = [
     "fastapi==0.109.0",
     "uvicorn[standard]==0.27.0",
     "pydantic==2.5.0",
+]
+
+[project.optional-dependencies]
+dev = [
     "pytest==7.4.3",
     "pytest-cov==4.1.0",
+    "mypy==1.7.1",
+    "black==23.12.1",
+    "flake8==6.1.0",
+    "isort==5.13.2",
+]
+
+[tool.uv]
+# uv uses pyproject.toml for project configuration
+# Virtual environment location: .venv/
+# Dependencies locked in uv.lock for reproducibility
+dev-dependencies = [
+    "pytest>=7.4.3",
+    "pytest-cov>=4.1.0",
+    "mypy>=1.7.1",
+    "black>=23.12.1",
+    "flake8>=6.1.0",
+    "isort>=5.13.2",
 ]
 
 [tool.pytest.ini_options]

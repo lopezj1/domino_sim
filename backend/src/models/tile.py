@@ -32,6 +32,10 @@ class Tile:
         """Total pips on the tile."""
         return self.pips_a + self.pips_b
     
+    def flip(self) -> "Tile":
+        """Return a new tile with pips swapped."""
+        return Tile(self.pips_b, self.pips_a)
+    
     def __repr__(self) -> str:
         """String representation: Tile(a|b)."""
         return f"Tile({self.pips_a}|{self.pips_b})"
