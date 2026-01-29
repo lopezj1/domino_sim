@@ -1,50 +1,50 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Domino Simulation Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Model-Driven Architecture
+The simulation engine is organized around data models that cleanly separate concerns: Game state, Player strategies, Event queue, and Result aggregation. Each model MUST be independently testable and documented with clear contracts. Models are immutable where possible to ensure reproducibility across Monte Carlo runs.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Discrete Event Simulation (DES) Pattern
+Event handling MUST follow strict DES semantics: events ordered by timestamp, deterministic processing, and no race conditions. The event loop is the authoritative control flow. All game mechanics (player moves, game state transitions, outcome determination) manifest as discrete events with well-defined pre/post-conditions.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. Strategy Pluggability
+Player strategies MUST implement a common interface allowing arbitrary strategy substitution without modifying core simulation code. Strategies are pure functions of observable game state (hand, boneyard, board layout, opponent info). All strategy implementations MUST be independently testable and include docstring specifications of assumptions and behavior.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Reproducibility & Randomness Control
+Monte Carlo runs MUST be deterministic given a fixed random seed. Random number generation is controlled at the Simulation orchestrator level. All random decisions (drawing tiles, strategy randomness if any) explicitly consume RNG state. Random seeds MUST be logged with results for result replication.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Validation & Correctness (Test-First)
+Test-first discipline is NON-NEGOTIABLE for game rules, strategy evaluation, and result aggregation. Unit tests verify model contracts and invariants (e.g., total tiles constant, valid move enforcement). Integration tests verify end-to-end game traces and strategy performance metrics. No feature accepted without green tests.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### VI. Observable Simulation Runs
+All simulation state transitions and outcomes MUST be logged with sufficient detail to support debugging, result auditing, and scientific reproducibility. Logs capture: event sequence, player actions, game state snapshots, final statistics. Output defaults to structured JSON for machine parsing; human-readable summaries available on demand.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+## Technical Stack & Constraints
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+- **Language**: Python 3.11+ (type hints required; mypy type-checking enforced)
+- **Testing**: pytest with fixtures for game state setup and replay
+- **Randomness**: `random.Random` with explicit seed management
+- **Performance**: Monte Carlo batches MUST complete in <60s per 10k runs on standard hardware; memory footprint <1GB per run batch
+- **No external game engines**: Rules, state, and strategy logic implemented in-house for full transparency and reproducibility
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Development Workflow
+
+- All new features/bug fixes start with failing tests (Red → Green → Refactor)
+- Game rule changes require updating both rules module AND validation test suite
+- Strategy implementations come with reference docstrings and benchmark results
+- Simulation results MUST include run metadata (seed, player count, strategy names, tile distribution) for external reproducibility
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+**Amendment Procedure**: Constitution changes require re-validation of all existing tests and a summary of impacted modules.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Versioning**: MAJOR version for backward-incompatible rule/model changes; MINOR for new strategies or metrics; PATCH for fixes/clarifications.
+
+**Compliance Review**: All PRs checked that:
+- Tests cover new game mechanics / strategy logic
+- Model invariants documented and validated
+- Randomness sourcing is explicit and seedable
+- Results include sufficient metadata for reproducibility
+
+**Version**: 1.0.0 | **Ratified**: 2025-01-29 | **Last Amended**: 2025-01-29
