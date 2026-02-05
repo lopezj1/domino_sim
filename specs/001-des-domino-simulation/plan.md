@@ -84,10 +84,17 @@ domino_sim/
 │   │   │   ├── game.py          # Game event loop orchestrator
 │   │   │   └── runner.py        # GameRunner for single-game simulation
 │   │   ├── aggregation/
-│   │   │   └── monte_carlo.py   # Monte Carlo batch orchestration
+│   │   │   └── monte_carlo.py   # Monte Carlo batch orchestration + visualization
 │   │   ├── api/
 │   │   │   ├── schemas/         # Pydantic request/response schemas
-│   │   │   └── routes/          # API endpoints (simulation, results)
+│   │   │   │   ├── game.py      # GameRunRequest/Response
+│   │   │   │   ├── monte_carlo.py  # MonteCarloRequest/Response
+│   │   │   │   └── visualization.py  # VisualizationDataResponse
+│   │   │   └── routes/          # API endpoints (simulation, results, visualization)
+│   │   │       ├── health.py    # Health check
+│   │   │       ├── game.py      # Single game simulation
+│   │   │       ├── monte_carlo.py  # Monte Carlo comparison
+│   │   │       └── visualization.py  # Visualization data endpoint
 │   │   ├── cli/
 │   │   │   └── main.py          # CLI entry point for batch runs
 │   │   └── __init__.py
@@ -121,9 +128,24 @@ domino_sim/
 │   ├── vite.config.ts
 │   ├── src/
 │   │   ├── components/
+│   │   │   ├── GameSimulator.tsx       # Main simulation control panel
+│   │   │   ├── StrategySelector.tsx    # Strategy picker dropdown
+│   │   │   ├── GameViewer.tsx          # Single game result display
+│   │   │   ├── MonteCarloChart.tsx     # Monte Carlo results bar chart
+│   │   │   └── MonteCarloPathsChart.tsx # Convergence visualization (NEW)
 │   │   ├── pages/
-│   │   └── services/
+│   │   │   ├── Home.tsx                # Landing page
+│   │   │   ├── SingleGame.tsx          # Single game simulation page
+│   │   │   ├── MonteCarlo.tsx          # Monte Carlo comparison page
+│   │   │   └── Visualization.tsx       # Visualization dashboard (NEW)
+│   │   ├── services/
+│   │   │   ├── api.ts                  # API client (axios)
+│   │   │   └── types.ts                # TypeScript types mirror
+│   │   └── styles/
+│   │       └── globals.css
 │   └── tests/
+│       ├── unit/
+│       └── integration/
 │
 ├── specs/                       # Specification documents
 │   └── 001-des-domino-simulation/

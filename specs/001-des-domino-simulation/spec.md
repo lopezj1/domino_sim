@@ -93,6 +93,30 @@ A researcher needs to run many independent simulations with paired comparisons a
 
 ---
 
+---
+
+### User Story 5 - Visualize Monte Carlo Convergence and Uncertainty (Priority: P2)
+
+A researcher needs to visualize Monte Carlo simulation paths showing how cumulative win rate converges over time, demonstrating uncertainty quantification and confidence in strategy comparison results.
+
+**Why this priority**: Visualization is critical for understanding statistical convergence, publication-quality figures, and communicating results to stakeholders.
+
+**Independent Test**: Can be fully tested by:
+1. Running Monte Carlo with 100+ games
+2. Requesting visualization data via API
+3. Verifying data includes cumulative win rates per game number
+4. Rendering plot showing convergence paths with proper axes
+
+**Acceptance Scenarios**:
+
+1. **Given** a completed Monte Carlo result, **When** visualization data is requested, **Then** API returns JSON with per-game cumulative statistics (game_number, cumulative_win_rate_a, cumulative_win_rate_b).
+2. **Given** visualization data, **When** rendered in frontend, **Then** chart displays X-axis as game number (1 to N) and Y-axis as cumulative win rate (0.0 to 1.0).
+3. **Given** multiple independent simulation paths, **When** plotted, **Then** visualization shows convergence (narrow spread) and uncertainty (wide early, tight later).
+4. **Given** a Monte Carlo comparison, **When** final win rate is reached, **Then** horizontal reference line shows final estimated win rate with 95% CI annotation.
+5. **Given** researcher wants to export, **When** export button clicked, **Then** visualization downloads as PNG/SVG with publication-quality resolution.
+
+---
+
 ### Edge Cases
 
 - What happens when a boneyard is exhausted and a player has no legal plays? (Result: pass, and if all players pass, round ends)
@@ -123,6 +147,11 @@ A researcher needs to run many independent simulations with paired comparisons a
 - **FR-016**: System MUST serialize results to structured JSON with per-run details and aggregate statistics.
 - **FR-017**: System MUST log game traces (event sequence, player moves, state snapshots) for debugging and result validation.
 - **FR-018**: System MUST support multiple concrete strategy implementations (greedy, blocking, random) as examples.
+- **FR-019**: System MUST provide API endpoint for Monte Carlo visualization data returning per-game cumulative statistics.
+- **FR-020**: System MUST support generating multiple independent simulation paths for uncertainty visualization (default: 100 paths).
+- **FR-021**: Frontend MUST render Monte Carlo paths as line chart with game number (X-axis) and cumulative win rate (Y-axis).
+- **FR-022**: Visualization MUST show convergence: wide spread early (high uncertainty), narrow spread later (confident estimate).
+- **FR-023**: Visualization MUST include final win rate reference line with 95% confidence interval annotation.
 
 ### Key Entities
 
@@ -132,6 +161,7 @@ A researcher needs to run many independent simulations with paired comparisons a
 - **Strategy**: Abstract interface defining `choose_move(state, legal_moves) -> Move`. Implementations are pure functions of observable game state.
 - **GameOutcome**: Result of one simulation run: winner (strategy name), score_differential, turn_count, seed, game_trace (optional).
 - **MonteCarloResult**: Aggregated results across multiple runs: total_runs, win_count_a, win_count_b, win_rate_a, mean_score_diff, variance, std_dev, ci_lower, ci_upper, per_run_outcomes.
+- **MonteCarloVisualizationData**: Per-game cumulative statistics for plotting: game_numbers (array 1..N), paths (array of cumulative_win_rates per path), final_win_rate, confidence_interval_bounds.
 - **GameTrace**: Sequence of events (deal, play_tile, draw, pass, end_round, end_game) with timestamps (event index) and state snapshots.
 
 ## Success Criteria *(mandatory)*
@@ -148,3 +178,6 @@ A researcher needs to run many independent simulations with paired comparisons a
 - **SC-008**: Game outcomes include seed, strategy names, and full trace enabling external reproduction of any game without code access (trace completeness).
 - **SC-009**: Monte Carlo orchestration enables fair comparison: paired runs with common random numbers (same seed for A vs B and B vs A) to isolate strategy effect from luck.
 - **SC-010**: Code is readable and modular with separation of concerns: <500 LOC per module (game state, rules, strategy, simulation, aggregation) and zero circular dependencies.
+- **SC-011**: Monte Carlo visualization generates in <5 seconds for 100 paths × 500 games (50,000 total simulations) with smooth frontend rendering.
+- **SC-012**: Visualization clearly demonstrates convergence with visible uncertainty quantification (wide early spread, narrow final convergence).
+- **SC-013**: Chart is publication-quality: proper axes labels, legend, reference lines, and exportable as high-resolution PNG/SVG (300+ DPI).
