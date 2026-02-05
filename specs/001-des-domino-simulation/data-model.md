@@ -205,6 +205,43 @@ class MonteCarloResult:
 
 ---
 
+### 8. MonteCarloVisualizationData
+
+Data structure for Monte Carlo convergence visualization.
+
+```python
+class MonteCarloVisualizationData:
+    strategy_a: str
+    strategy_b: str
+    total_games: int
+    num_paths: int
+    game_numbers: list[int]               # [1, 2, 3, ..., total_games]
+    paths: list[list[float]]              # num_paths × total_games matrix
+                                          # Each inner list: cumulative win rates
+    final_win_rate_a: float
+    final_win_rate_b: float
+    ci_lower: float                       # 95% CI for final win rate
+    ci_upper: float
+    convergence_std: float                # Std dev of final path values
+```
+
+**Invariants**:
+- `len(game_numbers) == total_games`
+- `len(paths) == num_paths`
+- `all(len(path) == total_games for path in paths)`
+- `all(0.0 <= rate <= 1.0 for path in paths for rate in path)`
+- `ci_lower <= final_win_rate_a <= ci_upper`
+- `num_paths >= 10` (minimum for meaningful visualization)
+
+**Immutable**: Yes
+
+**Usage**: 
+- Backend generates multiple independent simulation paths
+- Each path shows cumulative win rate: `wins_so_far / games_played_so_far`
+- Frontend renders as line chart with convergence demonstration
+
+---
+
 ## State Transitions
 
 ### Game Lifecycle

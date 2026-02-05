@@ -1,0 +1,182 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  padding: 3rem 2rem;
+  text-align: center;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+}
+
+.header h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 300;
+}
+
+.main {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.status-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.status-card h2 {
+  margin-bottom: 1rem;
+  color: var(--primary);
+}
+
+.status {
+  font-size: 1.1rem;
+  color: var(--success);
+  font-weight: 500;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.feature-card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+}
+
+.feature-card h3 {
+  margin-bottom: 0.75rem;
+  color: var(--primary);
+  font-size: 1.25rem;
+}
+
+.feature-card p {
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.feature-card ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.feature-card li {
+  padding: 0.25rem 0;
+  color: var(--text);
+}
+
+.feature-card li:before {
+  content: "✓ ";
+  color: var(--success);
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.quick-start, .coming-soon {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+.quick-start h2, .coming-soon h2 {
+  margin-bottom: 1rem;
+  color: var(--primary);
+}
+
+.api-info h3 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.api-info ul {
+  list-style: none;
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+}
+
+.api-info li {
+  padding: 0.5rem 0;
+}
+
+.api-info a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.api-info a:hover {
+  color: var(--secondary);
+  text-decoration: underline;
+}
+
+.coming-soon ul {
+  list-style: none;
+  padding-left: 1rem;
+  margin: 1rem 0;
+}
+
+.coming-soon li {
+  padding: 0.25rem 0;
+  color: var(--text-secondary);
+}
+
+.coming-soon li:before {
+  content: "⏳ ";
+  margin-right: 0.5rem;
+}
+
+.note {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgba(37, 99, 235, 0.1);
+  border-left: 3px solid var(--primary);
+  border-radius: 4px;
+  color: var(--text-secondary);
+}
+
+.footer {
+  background-color: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary);
+  margin-top: auto;
+}
+
+.footer p {
+  margin: 0.25rem 0;
+}

@@ -82,3 +82,32 @@ class TestMonteCarloRunner:
         # CI should be valid
         assert result.ci_lower <= result.ci_upper
         assert result.std_dev_score_diff_a >= 0
+    
+    def test_plot_monte_carlo_paths_validation(self):
+        """Test plotting validation without actually rendering."""
+        greedy = GreedyStrategy()
+        rng = SeededRNG(seed=77)
+        random_strat = RandomStrategy(rng)
+        
+        runner = MonteCarloRunner(greedy, random_strat, num_runs=10, seed=6000)
+        result = runner.run()
+        
+        # Test that num_paths > total_runs raises error
+        with pytest.raises(ValueError, match="num_paths.*cannot exceed total_runs"):
+            runner.plot_monte_carlo_paths(result, num_paths=20)
+    
+    def test_plot_monte_carlo_paths_no_matplotlib(self, monkeypatch):
+        """Test graceful failure when matplotlib is not installed."""
+        greedy = GreedyStrategy()
+        rng = SeededRNG(seed=88)
+        random_strat = RandomStrategy(rng)
+        
+        runner = MonteCarloRunner(greedy, random_strat, num_runs=10, seed=7000)
+        result = runner.run()
+        
+        # Mock matplotlib as unavailable
+        import src.aggregation.monte_carlo as mc_module
+        monkeypatch.setattr(mc_module, 'HAS_MATPLOTLIB', False)
+        
+        with pytest.raises(ImportError, match="matplotlib is required"):
+            runner.plot_monte_carlo_paths(result, num_paths=5)
