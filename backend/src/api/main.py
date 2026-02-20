@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routes import visualization_router
+from .routes import game_router, visualization_router
 
 app = FastAPI(
     title="Domino Simulation API",
@@ -28,6 +28,7 @@ async def health_check():
 
 # Include routers
 app.include_router(visualization_router)
+app.include_router(game_router)
 
 
 if __name__ == "__main__":

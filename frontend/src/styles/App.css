@@ -180,3 +180,159 @@
 .footer p {
   margin: 0.25rem 0;
 }
+
+/* ── Forms ─────────────────────────────────────────────────────────────────── */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 140px;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.form-group select,
+.form-group input[type="number"],
+.form-group input[type="range"] {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  padding: 0.4rem 0.6rem;
+  font-size: 0.95rem;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+/* ── Buttons ────────────────────────────────────────────────────────────────── */
+
+.btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.55rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s, opacity 0.2s;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--secondary);
+}
+
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: rgba(37, 99, 235, 0.1);
+}
+
+/* ── Loading spinner ─────────────────────────────────────────────────────────── */
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* ── Chart ──────────────────────────────────────────────────────────────────── */
+
+.chart-container {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+}
+
+/* ── Result grid ────────────────────────────────────────────────────────────── */
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.result-grid .label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.result-grid .value {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.result-grid .value.winner {
+  color: var(--success);
+}
+
+/* ── Trace details ──────────────────────────────────────────────────────────── */
+
+.trace-details {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.trace-details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--primary);
+  user-select: none;
+}
+
+/* ── Error banner ───────────────────────────────────────────────────────────── */
+
+.error-banner {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  border-radius: 6px;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1.25rem;
+  color: #fca5a5;
+  display: flex;
+  align-items: center;
+}
